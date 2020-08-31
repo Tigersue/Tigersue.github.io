@@ -7,15 +7,15 @@
   
   <title>SSH原理和使用 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="SSH SSH 是一种用于计算机之间加密登录的网络协议，主要用于登陆远程主机 基本用法 $ ssh -p 2222 user@host  SSH的默认端口是22，也就是说，你的登录请求会送进远程主机的22端口。使用p参数，可以修改这个端口。 SSH原理 SSH之所以能够保证安全，原因在于它采用了公钥加密。  整个过程是这样的：（1）远程主机收到用户的登录请求，把自己的公钥发给用户。（2）用户使用这">
+  <meta name="description" content="SSH SSH 是一种用于计算机之间加密登录的网络协议，主要用于登陆远程主机 基本用法 1$ ssh -p 2222 user@host   SSH的默认端口是22，也就是说，你的登录请求会送进远程主机的22端口。使用p参数，可以修改这个端口。 SSH原理 SSH之所以能够保证安全，原因在于它采用了公钥加密。  整个过程是这样的：（1）远程主机收到用户的登录请求，把自己的公钥发给用户。（2）用户使">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SSH原理和使用">
 <meta property="og:url" content="http://yoursite.com/2020/08/31/SSH/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="SSH SSH 是一种用于计算机之间加密登录的网络协议，主要用于登陆远程主机 基本用法 $ ssh -p 2222 user@host  SSH的默认端口是22，也就是说，你的登录请求会送进远程主机的22端口。使用p参数，可以修改这个端口。 SSH原理 SSH之所以能够保证安全，原因在于它采用了公钥加密。  整个过程是这样的：（1）远程主机收到用户的登录请求，把自己的公钥发给用户。（2）用户使用这">
+<meta property="og:description" content="SSH SSH 是一种用于计算机之间加密登录的网络协议，主要用于登陆远程主机 基本用法 1$ ssh -p 2222 user@host   SSH的默认端口是22，也就是说，你的登录请求会送进远程主机的22端口。使用p参数，可以修改这个端口。 SSH原理 SSH之所以能够保证安全，原因在于它采用了公钥加密。  整个过程是这样的：（1）远程主机收到用户的登录请求，把自己的公钥发给用户。（2）用户使">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-08-31T15:58:31.000Z">
-<meta property="article:modified_time" content="2020-08-31T16:28:42.012Z">
+<meta property="article:modified_time" content="2020-08-31T16:34:11.195Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -89,7 +89,8 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="SSH"><a href="#SSH" class="headerlink" title="SSH"></a>SSH</h2><p> SSH 是一种用于计算机之间加密登录的网络协议，主要用于登陆远程主机</p>
-<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p> <code>$ ssh -p 2222 user@host</code></p>
+<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -p 2222 user@host</span><br></pre></td></tr></table></figure>
+
 <p> SSH的默认端口是22，也就是说，你的登录请求会送进远程主机的22端口。使用p参数，可以修改这个端口。</p>
 <h2 id="SSH原理"><a href="#SSH原理" class="headerlink" title="SSH原理"></a>SSH原理</h2><p> SSH之所以能够保证安全，原因在于它采用了公钥加密。</p>
 <p> 整个过程是这样的：（1）远程主机收到用户的登录请求，把自己的公钥发给用户。（2）用户使用这个公钥，将登录密码加密后，发送回来。（3）远程主机用自己的私钥，解密登录密码，如果密码正确，就同意用户登录。</p>
@@ -98,14 +99,16 @@
 <p>那么SSH协议是如何应对的呢？</p>
 <h3 id="1、口令登陆"><a href="#1、口令登陆" class="headerlink" title="1、口令登陆"></a>1、口令登陆</h3><p>远程主机在自己的网站上贴出公钥指纹，以便用户自行核对。（所谓”公钥指纹”，是指公钥长度较长（这里采用RSA算法，长达1024位），很难比对，所以对其进行MD5计算，将它变成一个128位的指纹。上例中是98:2e:d7:e0:de:9f:ac:67:28:c2:42:2d:37:16:58:4d，再进行比较）<br>假定经过风险衡量以后，用户决定接受这个远程主机的公钥。然后输入密码登陆。当远程主机的公钥被接受以后，它就会被保存在文件$HOME/.ssh/known_hosts之中。下次再连接这台主机，系统就会认出它的公钥已经保存在本地了，从而跳过警告部分，直接提示输入密码</p>
 <h3 id="2、公钥登陆"><a href="#2、公钥登陆" class="headerlink" title="2、公钥登陆"></a>2、公钥登陆</h3><p>用户将自己的公钥储存在远程主机上。登录的时候，远程主机会向用户发送一段随机字符串，用户用自己的私钥加密后，再发回来。远程主机用事先储存的公钥进行解密，如果成功，就证明用户是可信的，直接允许登录shell，不再要求密码。</p>
-<h2 id="生成公钥"><a href="#生成公钥" class="headerlink" title="生成公钥"></a>生成公钥</h2><p> <code>$ ssh-keygen</code></p>
+<h2 id="生成公钥"><a href="#生成公钥" class="headerlink" title="生成公钥"></a>生成公钥</h2> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen</span><br></pre></td></tr></table></figure>
+
 <p> 运行结束以后，在$HOME/.ssh/目录下，会新生成两个文件：id_rsa.pub和id_rsa。前者是你的公钥，后者是你的私钥。</p>
-<p> <code>$ ssh-copy-id user@host</code><br> 将公钥传送保存到远程主机host上面</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-copy-id user@host</span><br></pre></td></tr></table></figure>
+<p> 将公钥传送保存到远程主机host上面</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/08/31/SSH/" data-id="ckeiqml3c0000tet354wjezbu" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2020/08/31/SSH/" data-id="ckeiqtior00001zt3e0511qze" class="article-share-link">Share</a>
       
       
     </footer>
